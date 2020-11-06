@@ -4,9 +4,7 @@ module Word2DictMatcher exposing
     , sentenceHistograms
     )
 
-{-| #Types
-
-@docs Sentence, Tokens, Histograms
+{-|
 
 
 # Result
