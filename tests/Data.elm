@@ -4,7 +4,8 @@ module Data exposing (..)
 
 
 data =
-    [ " What is the return policy?"
+    [ "Sorry, there is no match to your text, please be more specific"
+    , "What is the return policy?"
     , "What are the shipping Options?"
     , "What are the international taxes, duties, etc. that I have to pay?"
     , "When will I receive my order?"
@@ -22,7 +23,7 @@ data =
     , "What payment methods do you accept?"
     , "Which currency will I be charged in?"
     , "Do you offer 3 or 4 times payment option?"
-    , "Where do you ship?"
+    , "Where do you ship currently?"
     , "How long does it take to ship my order?"
     , "Do you offer fast shipping?"
     , "How can I track my package?"

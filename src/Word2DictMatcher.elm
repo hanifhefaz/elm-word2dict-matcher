@@ -71,6 +71,13 @@ score firstDict tempDict ( bestCount, maybeBestDictSoFar ) =
             if nWordsMatched > bestCount then
                 ( nWordsMatched, Just tempDict )
 
+            else if nWordsMatched == bestCount then
+                if Dict.size bestDictSoFar > Dict.size tempDict then
+                    ( nWordsMatched, Just tempDict )
+
+                else
+                    ( nWordsMatched, Just bestDictSoFar )
+
             else
                 ( bestCount, Just bestDictSoFar )
 

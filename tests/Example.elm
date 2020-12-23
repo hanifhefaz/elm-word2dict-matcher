@@ -100,6 +100,27 @@ tests =
                      -- Give me the expected data
                     )
         , --skip <|
+          test "same mathces at the data, return the shortest one." <|
+            \() ->
+                let
+                    searchString =
+                        [ "where do you ship" ]
+
+                    searchDict =
+                        Word2DictMatcher.wordsDict searchString
+                in
+                Expect.equal [ ( "do", 1 ), ( "ship", 1 ), ( "where", 1 ), ( "you", 1 ) ]
+                    (case Word2DictMatcher.findRelevantDict searchDict dataDict of
+                        Nothing ->
+                            searchDict |> Dict.toList
+
+                        -- Give me back the search dict
+                        Just bestDict ->
+                            bestDict
+                                |> Dict.toList
+                     -- Give me the expected data
+                    )
+        , --skip <|
           test "data tokenizatoin and capital letters test" <|
             \() ->
                 let
