@@ -142,6 +142,27 @@ tests =
                      -- Give me the expected data
                     )
         , --skip <|
+          test "test empty string" <|
+            \() ->
+                let
+                    searchString =
+                        [ " " ]
+
+                    searchDict =
+                        Word2DictMatcher.wordsDict searchString
+                in
+                Expect.equal [ ( "be", 1 ), ( "is", 1 ), ( "match", 1 ), ( "more", 1 ), ( "no", 1 ), ( "please", 1 ), ( "sorry", 1 ), ( "specific", 1 ), ( "text", 1 ), ( "there", 1 ), ( "to", 1 ), ( "your", 1 ) ]
+                    (case Word2DictMatcher.findRelevantDict searchDict dataDict of
+                        Nothing ->
+                            searchDict |> Dict.toList
+
+                        -- Give me back the search dict
+                        Just bestDict ->
+                            bestDict
+                                |> Dict.toList
+                     -- Give me the expected data
+                    )
+        , --skip <|
           test "data tokenizatoin and capital letters test" <|
             \() ->
                 let
@@ -162,7 +183,7 @@ tests =
                                 |> Dict.toList
                      -- Give me the expected data
                     )
-        , --skip <|
+        , --skip <| -- this test should fail, as of now.
           test "search string tokenizatoin and capital letters test" <|
             \() ->
                 let
