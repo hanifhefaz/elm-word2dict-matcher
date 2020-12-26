@@ -258,4 +258,20 @@ wordsDictTests =
                 in
                 Expect.equal [ ( "testing", 1 ), ( "text", 1 ), ( "the", 1 ) ]
                     (Word2DictMatcher.wordsDict searchString |> Dict.toList)
+        , test "test multiple words search text conversoin to dictionary with tokenizatoin." <|
+            \() ->
+                let
+                    searchString =
+                        [ "t?esting the1 text?" ]
+                in
+                Expect.equal [ ( "testing", 1 ), ( "text", 1 ), ( "the", 1 ) ]
+                    (Word2DictMatcher.wordsDict searchString |> Dict.toList)
+        , test "test multiple words search text conversoin to dictionary with capital letters." <|
+            \() ->
+                let
+                    searchString =
+                        [ "TesTing tHe tEXT" ]
+                in
+                Expect.equal [ ( "testing", 1 ), ( "text", 1 ), ( "the", 1 ) ]
+                    (Word2DictMatcher.wordsDict searchString |> Dict.toList)
         ]
