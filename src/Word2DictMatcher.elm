@@ -41,10 +41,10 @@ type alias Histogram =
 
 {-| This will make a dictionary from a sentence
 -}
-wordsDict : List String -> Dict String Int
+wordsDict : Tokens -> Histogram
 wordsDict vocabulary =
     vocabulary
-        |> List.concatMap String.words
+        |> List.concatMap tokenize
         |> toHistogram
 
 

@@ -1,4 +1,4 @@
-module Example exposing (tests)
+module Example exposing (relevantDictTests, sentenceHistogramsTests, wordsDictTests)
 
 import Data
 import Dict exposing (..)
@@ -13,8 +13,8 @@ dataDict =
     Data.data |> Word2DictMatcher.sentenceHistograms
 
 
-tests : Test
-tests =
+relevantDictTests : Test
+relevantDictTests =
     describe "Find Relevant Dictionary"
         [ test "one word match" <|
             \() ->
@@ -183,7 +183,7 @@ tests =
                                 |> Dict.toList
                      -- Give me the expected data
                     )
-        , --skip <| -- this test should fail, as of now.
+        , --skip <|
           test "search string tokenizatoin and capital letters test" <|
             \() ->
                 let
@@ -204,4 +204,58 @@ tests =
                                 |> Dict.toList
                      -- Give me the expected data
                     )
+        ]
+
+
+sentenceHistogramsTests : Test
+sentenceHistogramsTests =
+    describe
+        "Tests making dictionary from the data"
+        [ test "test making dictionary from the data with two sentences." <|
+            \() ->
+                let
+                    dataText =
+                        [ "test", "testing" ]
+                in
+                Expect.equal [ Dict.fromList [ ( "test", 1 ) ], Dict.fromList [ ( "testing", 1 ) ] ]
+                    (dataText |> Word2DictMatcher.sentenceHistograms)
+        , test "test making dictionary from the data with two sentences and Captial letters" <|
+            \() ->
+                let
+                    dataText =
+                        [ "Test", "teSting" ]
+                in
+                Expect.equal [ Dict.fromList [ ( "test", 1 ) ], Dict.fromList [ ( "testing", 1 ) ] ]
+                    (dataText |> Word2DictMatcher.sentenceHistograms)
+        , test "test making dictionary from the data with two sentences and Captial letters and alphanumeric symbols." <|
+            \() ->
+                let
+                    dataText =
+                        [ "T/est??6?", "?teSting5?5" ]
+                in
+                Expect.equal [ Dict.fromList [ ( "test", 1 ) ], Dict.fromList [ ( "testing", 1 ) ] ]
+                    (dataText |> Word2DictMatcher.sentenceHistograms)
+        ]
+
+
+wordsDictTests : Test
+wordsDictTests =
+    describe
+        "Testing the wordsDict function"
+        [ test "test single word search text conversoin to dictionary." <|
+            \() ->
+                let
+                    searchString =
+                        [ "test" ]
+                in
+                Expect.equal [ ( "test", 1 ) ]
+                    (Word2DictMatcher.wordsDict searchString |> Dict.toList)
+        , test "test multiple words search text conversoin to dictionary." <|
+            \() ->
+                let
+                    searchString =
+                        [ "testing the text" ]
+                in
+                Expect.equal [ ( "testing", 1 ), ( "text", 1 ), ( "the", 1 ) ]
+                    (Word2DictMatcher.wordsDict searchString |> Dict.toList)
         ]
