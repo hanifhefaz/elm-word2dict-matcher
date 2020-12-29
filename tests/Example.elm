@@ -1,4 +1,4 @@
-module Example exposing (relevantDictTests, sentenceHistogramsTests, wordsDictTests)
+module Example exposing (fuzzerTests, relevantDictTests, sentenceHistogramsTests, wordsDictTests)
 
 import Data
 import Dict exposing (..)
@@ -275,3 +275,31 @@ wordsDictTests =
                 Expect.equal [ ( "testing", 1 ), ( "text", 1 ), ( "the", 1 ) ]
                     (Word2DictMatcher.wordsDict searchString |> Dict.toList)
         ]
+
+
+fuzzerTests : Test
+fuzzerTests =
+    describe
+        "Fuzz test the wordsDict function"
+        [ fuzz (Fuzz.intRange 1 10) "counts repeated words" <|
+            \i ->
+                let
+                    searchString =
+                        "what"
+                in
+                Expect.equal [ ( "what", i ) ]
+                    (List.repeat i searchString |> Word2DictMatcher.wordsDict |> Dict.toList)
+        , fuzz (listFrom myWords) "search string length is equal to the sum of output dictionary values" <|
+            \input ->
+                Expect.equal (List.length input)
+                    (input |> Word2DictMatcher.wordsDict |> Dict.values |> List.sum)
+        ]
+
+
+myWords =
+    [ "this", "is", "a", "test" ]
+
+
+listFrom : List a -> Fuzz.Fuzzer (List a)
+listFrom words =
+    words |> List.map Fuzz.constant |> Fuzz.oneOf |> Fuzz.list
