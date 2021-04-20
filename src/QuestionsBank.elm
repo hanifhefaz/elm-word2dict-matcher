@@ -10,9 +10,16 @@ module QuestionsBank exposing
 
 @docs data
 
+
+# Answer Model
+
+@docs Answer
+
 -}
 
 
+{-| This model defines the question and the answer.
+-}
 type alias Answer =
     { answer : String, question : String }
 
