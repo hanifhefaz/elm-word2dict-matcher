@@ -25,6 +25,7 @@ module Word2DictMatcher exposing
 
 import Dict exposing (..)
 import Html exposing (..)
+import QuestionBank exposing (..)
 
 
 type alias Sentence =
@@ -49,37 +50,56 @@ wordsDict vocabulary =
 
 
 {-| Finds the sentences with the most occurances from a search string
-Returns all the words from the matched sentence as a dictionary, which you can later convert to Html msg.
+Returns the related answer for the returned quesiton in the data.
 -}
-findRelevantDict : Dict String Int -> List (Dict String Int) -> Maybe (Dict String Int)
-findRelevantDict firstDict allDicts =
-    List.foldl (score firstDict) ( 0, Nothing ) allDicts
-        |> Tuple.second
+findRelevantDict : Dict String Int -> List QuestionBank.Answer -> Maybe QuestionBank.Answer
+findRelevantDict firstDict answers =
+    case List.foldl (score firstDict) Nothing answers of
+        Just (Score answer _) ->
+            Just answer
 
-
-score firstDict tempDict ( bestCount, maybeBestDictSoFar ) =
-    let
-        nWordsMatched =
-            Dict.intersect firstDict tempDict
-                |> Dict.size
-    in
-    case maybeBestDictSoFar of
         Nothing ->
-            ( nWordsMatched, Just tempDict )
+            Nothing
 
-        Just bestDictSoFar ->
-            if nWordsMatched > bestCount then
-                ( nWordsMatched, Just tempDict )
 
-            else if nWordsMatched == bestCount && nWordsMatched > 0 then
-                if Dict.size bestDictSoFar > Dict.size tempDict then
-                    ( nWordsMatched, Just tempDict )
+type Score
+    = Score QuestionBank.Answer { size : Int, matches : Int }
+
+
+score : Histogram -> QuestionBank.Answer -> Maybe Score -> Maybe Score
+score firstDict answer prevBest =
+    let
+        thisHistogram =
+            answer.question |> tokenize |> toHistogram
+
+        thisSize =
+            Dict.size thisHistogram
+
+        thisMatches =
+            thisHistogram
+                |> Dict.intersect firstDict
+                |> Dict.size
+
+        this =
+            Score answer { size = thisSize, matches = thisMatches }
+    in
+    case prevBest of
+        Nothing ->
+            Just this
+
+        Just (Score _ { size, matches }) ->
+            if thisMatches > matches && thisMatches >= 2 then
+                Just this
+
+            else if thisMatches == matches then
+                if thisSize < size then
+                    Just this
 
                 else
-                    ( nWordsMatched, Just bestDictSoFar )
+                    prevBest
 
             else
-                ( bestCount, Just bestDictSoFar )
+                prevBest
 
 
 tokenize : Sentence -> Tokens
@@ -87,6 +107,7 @@ tokenize =
     String.filter (\c -> c == ' ' || Char.isAlpha c)
         >> String.toLower
         >> String.words
+        >> List.filter (\x -> not <| List.member x stopWords)
 
 
 toHistogram : Tokens -> Histogram
@@ -108,3 +129,127 @@ toHistogram =
 sentenceHistograms : List Sentence -> List Histogram
 sentenceHistograms =
     List.map (tokenize >> toHistogram)
+
+
+stopWords : Tokens
+stopWords =
+    [ "a"
+    , "able"
+    , "about"
+    , "across"
+    , "after"
+    , "all"
+    , "almost"
+    , "also"
+    , "am"
+    , "among"
+    , "an"
+    , "and"
+    , "any"
+    , "are"
+    , "as"
+    , "at"
+    , "be"
+    , "because"
+    , "been"
+    , "but"
+    , "by"
+    , "can"
+    , "cannot"
+    , "could"
+    , "dear"
+    , "did"
+    , "do"
+    , "does"
+    , "either"
+    , "else"
+    , "ever"
+    , "every"
+    , "for"
+    , "from"
+    , "get"
+    , "got"
+    , "had"
+    , "has"
+    , "have"
+    , "he"
+    , "her"
+    , "hers"
+    , "him"
+    , "his"
+    , "how"
+    , "however"
+    , "i"
+    , "if"
+    , "in"
+    , "into"
+    , "is"
+    , "it"
+    , "its"
+    , "just"
+    , "least"
+    , "let"
+    , "like"
+    , "likely"
+    , "may"
+    , "me"
+    , "might"
+    , "most"
+    , "must"
+    , "my"
+    , "neither"
+    , "no"
+    , "nor"
+    , "not"
+    , "of"
+    , "off"
+    , "often"
+    , "on"
+    , "only"
+    , "or"
+    , "other"
+    , "our"
+    , "own"
+    , "rather"
+    , "said"
+    , "say"
+    , "says"
+    , "she"
+    , "should"
+    , "since"
+    , "so"
+    , "some"
+    , "than"
+    , "that"
+    , "the"
+    , "their"
+    , "them"
+    , "then"
+    , "there"
+    , "these"
+    , "they"
+    , "this"
+    , "tis"
+    , "to"
+    , "too"
+    , "twas"
+    , "us"
+    , "wants"
+    , "was"
+    , "we"
+    , "were"
+    , "what"
+    , "when"
+    , "where"
+    , "which"
+    , "while"
+    , "who"
+    , "whom"
+    , "why"
+    , "will"
+    , "with"
+    , "would"
+    , "yet"
+    , "you"
+    , "your"
+    ]
