@@ -14,6 +14,8 @@ type alias Answer =
     { answer : String, question : String }
 
 
+{-| Here you can define all your questions and answers.
+-}
 data : List Answer
 data =
     [ { answer = "Sorry, there is no match to your text, please be more specific", question = "i" }
