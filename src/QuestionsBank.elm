@@ -1,4 +1,7 @@
-module QuestionsBank exposing (data)
+module QuestionsBank exposing
+    ( data
+    , Answer
+    )
 
 {-|
 
