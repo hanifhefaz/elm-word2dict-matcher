@@ -1,4 +1,4 @@
-module QuestionsBank exposing (..)
+module QuestionsBank exposing (data)
 
 -- this is our data or data for list of Dicts
 
