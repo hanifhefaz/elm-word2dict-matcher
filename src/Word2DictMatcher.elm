@@ -63,7 +63,7 @@ findRelevantDict firstDict answers =
 
 
 type Score
-    = Score QuestionBank.Answer { size : Int, matches : Int }
+    = Score QuestionsBank.Answer { size : Int, matches : Int }
 
 
 score : Histogram -> QuestionsBank.Answer -> Maybe Score -> Maybe Score
