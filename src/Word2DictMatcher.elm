@@ -2,6 +2,9 @@ module Word2DictMatcher exposing
     ( findRelevantDict
     , wordsDict
     , sentenceHistograms
+    , tokenize
+    , stopWords
+    , toHistogram
     )
 
 {-|
@@ -20,6 +23,21 @@ module Word2DictMatcher exposing
 # Sentence Histograms
 
 @docs sentenceHistograms
+
+
+# Tokenization
+
+@docs tokenize
+
+
+# StopWords
+
+@docs stopWords
+
+
+# ToHistogram
+
+@docs toHistogram
 
 -}
 
@@ -102,6 +120,8 @@ score firstDict answer prevBest =
                 prevBest
 
 
+{-| This will tokenize the words and remove symbols.
+-}
 tokenize : Sentence -> Tokens
 tokenize =
     String.filter (\c -> c == ' ' || Char.isAlpha c)
@@ -110,6 +130,8 @@ tokenize =
         >> List.filter (\x -> not <| List.member x stopWords)
 
 
+{-| This will convert sentences to words histograms.
+-}
 toHistogram : Tokens -> Histogram
 toHistogram =
     List.foldl
@@ -131,6 +153,8 @@ sentenceHistograms =
     List.map (tokenize >> toHistogram)
 
 
+{-| This will remove all stopWords from the data, which are mentioned here.
+-}
 stopWords : Tokens
 stopWords =
     [ "a"
