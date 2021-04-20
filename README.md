@@ -1,48 +1,43 @@
 # word2dictMatcher
-Using this library, you will be able to compare one word, or a complete sentence of strings to some other sentences.
-The library will return only the sentence with the most words matched from the search string.
+This package is developed for chat bot services, where the user enters any question and the libraries job is to find the most related answer to that question, defined in the QuestionsBank file.
+
+If you need a chatbot to your website, this package is the best one to choose. The only thing you need is to define all your possible questions and answers in the QuestionsBank file.
+
+Please note, that this is not a machine learning package and do not expect to produce answers based on some magic. It uses the Bag of Words algorithm and compares your question to the data already defined.
+
+## How it works?
+Once you entered your question to the chatbot, your question will be divided into words and stored as a Dict data structure. all stop words and symbols will be removed as well. Since the answers and questions you defined in your QuestionsBank are already divided into words and stored as dicts, therfore the package will only convert your question, that you enter. Then the package compares your question to the questions listed in your QuestionsBank. at least words have to be matched in any question in the QuestionsBank to return an answer. You will be notified if there are no matches.
 
 ## How to use:
-To use this library, you will have to define your data first in the program or write it in a separate file and then import it to the program.
-Data is a list of string which contains sentences that you want to be matched against your search string.
-It looks something like:
-```elm
-data : List String
-data =
-    [ "He watched the dancing piglets with panda bear tummies in the swimming pool"
-    , "I purchased a baby clown from the Russian terrorist black market."
-    , "He was the type of guy who liked Christmas lights on his house in the middle of July."
-    , "If any cop asks you where you were, just say you were visiting Kansas."
-    , "Happiness can be found in the depths of chocolate pudding."
-    ]
-```
-Next you will have to define your search string. You can define it as below or you can use an input box based on your needs.
-```elm
-searchString : List String
-searchString =
-    [ "He went back to the house to see what had been recorded and was shocked at what he saw." ]
-```
-After you defined your data and search string, two more things needs to be defined in your program.
-1. Make data dictionary:
-```elm
-dataDict =
-    data |> Word2DictMatcher.sentenceHistograms
-```
-2. Make search string dictionary
-```elm
-searchDict =
-    Word2DictMatcher.wordsDict searchString
-```
-And you are good to GO!
-```elm
-main = 
-       case Word2DictMatcher.findRelevantDict searchDict dataDict of 
-       Nothing ->
-           text "Sorry, there is no words in the bag :)"
-       Just bestDict ->
-           bestDict 
-               |> Debug.toString
-               |> text
-```
+If you decided to use this library in your chatbot, then the first thing you have to do is to edit the QuestionsBank file and add your own questions and answers.
 
-There is a complete example included in the examples folder, to show how to use this package.
+Next you will have to define the types of your search string or your input question. You can define it as below or you can use an input box, or probably in a more advance way, based on your needs. This is nothing but the question that your customer will ask your chatbot.
+
+```elm
+init : Url Params -> Model
+init { params } =
+    {searchString = ""
+    , searchResult = NotSearched
+    }
+    
+type Msg
+    = TypedSearch String
+    | Search
+
+type SearchResult
+    = NotSearched
+    | Searched (Maybe QuestionsBank.Answer)
+```
+And then you can call the functions from the package in your update like this:
+
+```elm
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        TypedSearch str ->
+            { model | searchString = str }
+
+        Search ->
+            { model | searchResult = Searched <| Word2DictMatcher.findRelevantDict (model.searchString |> Word2DictMatcher.tokenize |> Word2DictMatcher.toHistogram) QuestionsBank.data }
+```
+A complete working example is located in the examples folder.
