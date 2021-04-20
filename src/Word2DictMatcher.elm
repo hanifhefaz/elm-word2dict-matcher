@@ -25,7 +25,7 @@ module Word2DictMatcher exposing
 
 import Dict exposing (..)
 import Html exposing (..)
-import QuestionBank exposing (..)
+import QuestionsBank exposing (..)
 
 
 type alias Sentence =
@@ -52,7 +52,7 @@ wordsDict vocabulary =
 {-| Finds the sentences with the most occurances from a search string
 Returns the related answer for the returned quesiton in the data.
 -}
-findRelevantDict : Dict String Int -> List QuestionBank.Answer -> Maybe QuestionBank.Answer
+findRelevantDict : Dict String Int -> List QuestionsBank.Answer -> Maybe QuestionsBank.Answer
 findRelevantDict firstDict answers =
     case List.foldl (score firstDict) Nothing answers of
         Just (Score answer _) ->
@@ -66,7 +66,7 @@ type Score
     = Score QuestionBank.Answer { size : Int, matches : Int }
 
 
-score : Histogram -> QuestionBank.Answer -> Maybe Score -> Maybe Score
+score : Histogram -> QuestionsBank.Answer -> Maybe Score -> Maybe Score
 score firstDict answer prevBest =
     let
         thisHistogram =
