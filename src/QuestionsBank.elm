@@ -1,6 +1,13 @@
 module QuestionsBank exposing (data)
 
--- this is our data or data for list of Dicts
+{-|
+
+
+# Questions Data
+
+@docs data
+
+-}
 
 
 type alias Answer =
