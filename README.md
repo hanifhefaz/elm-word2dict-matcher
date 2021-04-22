@@ -44,6 +44,8 @@ A complete working example is located in the examples folder.
 
 ## Open to Contributions
 
+Improve the current working example, or implement your own!
+
 I need to implement a chat window same as in facebook messenger, with only simple functionalities such as entering question and by pressing enter or OK button the question will be inside the chat window and after the question is posted there, the answer will come under it and as this flow goes on, a scroll bar will appear in the chat window.
 
 If you are interested in this, please contact me at any time, or leave a PR.
