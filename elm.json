@@ -3,7 +3,7 @@
     "name": "hanifhefaz/elm-word2dict-matcher",
     "summary": "Finds the most relevant sentence",
     "license": "MIT",
-    "version": "5.1.0",
+    "version": "5.1.1",
     "exposed-modules": [
         "Word2DictMatcher",
         "QuestionsBank"
