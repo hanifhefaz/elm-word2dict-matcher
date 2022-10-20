@@ -1,3 +1,7 @@
+# This package is deprecated!
+
+use https://package.elm-lang.org/packages/hanifhefaz/elm-word-search/latest/ instead. 
+
 # word2dictMatcher
 This package is developed for chat bot services, where the user enters any question and the libraries job is to find the most related answer to that question, defined in the QuestionsBank file.
 
